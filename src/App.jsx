@@ -1,25 +1,62 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import MainLayout from "./layouts/Mainlayout";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
+
 import Dashboard from "./pages/Dashboard";
 import Transactions from "./pages/Transactions";
 import Insights from "./pages/Insights";
 
+import Sidebar from "./components/Sidebar";
+import Header from "./components/Header";
+import Pagewrapper from "./components/Pagewrapper";
+
 function App() {
+  const location = useLocation();
+
   return (
-    <Router>
-      <Routes>
+    <div className="flex h-screen overflow-hidden">
 
-        {/* Layout Wrapper */}
-        <Route element={<MainLayout />}>
+      <Sidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="p-4 border-b border-white/5">
+          <Header />
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
 
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/insights" element={<Insights />} />
+              <Route
+                path="/"
+                element={
+                  <Pagewrapper>
+                    <Dashboard />
+                  </Pagewrapper>
+                }
+              />
 
-        </Route>
+              <Route
+                path="/transactions"
+                element={
+                  <Pagewrapper>
+                    <Transactions />
+                  </Pagewrapper>
+                }
+              />
 
-      </Routes>
-    </Router>
+              <Route
+                path="/insights"
+                element={
+                  <Pagewrapper>
+                    <Insights />
+                  </Pagewrapper>
+                }
+              />
+
+            </Routes>
+          </AnimatePresence>
+        </div>
+
+      </div>
+    </div>
   );
 }
 

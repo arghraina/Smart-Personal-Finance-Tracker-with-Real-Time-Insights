@@ -1,5 +1,5 @@
 import { useState } from "react";
-import useStore from "../store/useStore";
+import Usestore from "../store/Usestore";
 import {
   ResponsiveContainer,
   BarChart,
@@ -10,22 +10,20 @@ import {
 } from "recharts";
 
 function Insights() {
-  const transactions = useStore((state) => state.transactions);
+  const transactions = Usestore((state) => state.transactions);
 
-  // 🔥 Extract Months
   const months = [
     ...new Set(transactions.map((t) => t.date.slice(0, 7))),
   ].sort((a, b) => new Date(b) - new Date(a));
 
   const [selectedMonth, setSelectedMonth] = useState("All");
 
-  // 🔥 Filter Transactions based on Month
+  // Filter Transactions based on months:
   const filteredTxns =
     selectedMonth === "All"
       ? transactions
       : transactions.filter((t) => t.date.startsWith(selectedMonth));
 
-  // 📊 Basic Data
   const expenses = filteredTxns.filter((t) => t.amount < 0);
   const income = filteredTxns.filter((t) => t.amount > 0);
 
@@ -37,7 +35,6 @@ function Insights() {
   const savingsRate =
     totalIncome === 0 ? 0 : Math.round((netBalance / totalIncome) * 100);
 
-  // 🔥 Largest Expense
   let largestExpense = { amount: 0, title: "N/A" };
 
   expenses.forEach((t) => {
@@ -49,7 +46,6 @@ function Insights() {
     }
   });
 
-  // 🏷️ Category Maps
   const expenseMap = {};
   const incomeMap = {};
 
@@ -63,7 +59,7 @@ function Insights() {
     incomeMap[t.category] += t.amount;
   });
 
-  // 🔥 Sorted Top 5
+  // sorted Top 5:
   const expenseData = Object.entries(expenseMap)
     .map(([category, amount]) => ({ category, amount }))
     .sort((a, b) => b.amount - a.amount)
@@ -76,12 +72,12 @@ function Insights() {
 
   const topCategory = expenseData[0]?.category || "N/A";
 
-  // 📅 Avg Daily Expense
+  // Avg daily Expense
   const uniqueDays = new Set(expenses.map((t) => t.date)).size;
   const avgDailyExpense =
     uniqueDays === 0 ? 0 : Math.round(totalExpense / uniqueDays);
 
-  // 🔥 Monthly Table Data (ALWAYS ALL DATA)
+  // monthly Table Data
   const monthlyMap = {};
 
   transactions.forEach((t) => {
@@ -106,7 +102,6 @@ function Insights() {
     (a, b) => new Date(b.month) - new Date(a.month)
   );
 
-  // 🧠 Insight Text
   let insightText = "";
 
   if (filteredTxns.length === 0) {
@@ -127,33 +122,6 @@ function Insights() {
 
       <h1 className="text-2xl font-semibold">Insights</h1>
 
-      {/* 🔥 TOP CARDS */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
-          <p className="text-gray-400 text-sm">Net Balance</p>
-          <h2 className="text-2xl font-semibold mt-2">
-            ₹{netBalance.toLocaleString()}
-          </h2>
-        </div>
-
-        <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
-          <p className="text-gray-400 text-sm">Savings Rate</p>
-          <h2 className="text-2xl font-semibold mt-2">
-            {savingsRate}%
-          </h2>
-        </div>
-
-        <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
-          <p className="text-gray-400 text-sm">Transactions</p>
-          <h2 className="text-2xl font-semibold mt-2">
-            {filteredTxns.length}
-          </h2>
-        </div>
-
-      </div>
-
-      {/* 🔥 MONTH SELECTOR */}
       <div className="flex gap-3 flex-wrap">
         <button
           onClick={() => setSelectedMonth("All")}
@@ -181,32 +149,32 @@ function Insights() {
         ))}
       </div>
 
-      {/* 🔥 MONTHLY TABLES */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {/* 🔥 TOP CARDS */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
-          <h2 className="text-lg font-semibold mb-4">Monthly Earnings</h2>
-          {monthlyData.map((m) => (
-            <div key={m.month} className="flex justify-between py-2 border-b border-white/5">
-              <span className="text-gray-400">{m.month}</span>
-              <span className="text-green-400">₹{m.income.toLocaleString()}</span>
-            </div>
-          ))}
+          <p className="text-gray-400 text-sm">Net Balance</p>
+          <h2 className="text-2xl font-semibold mt-2">
+            ₹{netBalance.toLocaleString()}
+          </h2>
         </div>
 
         <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
-          <h2 className="text-lg font-semibold mb-4">Monthly Expenses</h2>
-          {monthlyData.map((m) => (
-            <div key={m.month} className="flex justify-between py-2 border-b border-white/5">
-              <span className="text-gray-400">{m.month}</span>
-              <span className="text-red-400">₹{m.expense.toLocaleString()}</span>
-            </div>
-          ))}
+          <p className="text-gray-400 text-sm">Savings Rate</p>
+          <h2 className="text-2xl font-semibold mt-2">
+            {savingsRate}%
+          </h2>
+        </div>
+
+        <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
+          <p className="text-gray-400 text-sm">Transactions</p>
+          <h2 className="text-2xl font-semibold mt-2">
+            {filteredTxns.length}
+          </h2>
         </div>
 
       </div>
 
-      {/* 🔥 METRICS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
@@ -235,7 +203,7 @@ function Insights() {
 
       </div>
 
-      {/* 🔥 EXPENSE GRAPH */}
+      {/* EXPENSE GRAPH */}
       <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
         <h2 className="text-lg font-semibold mb-4">Top Expenses</h2>
 
@@ -250,7 +218,7 @@ function Insights() {
         </ResponsiveContainer>
       </div>
 
-      {/* 🔥 INCOME GRAPH */}
+      {/* INCOME GRAPH */}
       <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
         <h2 className="text-lg font-semibold mb-4">Top Income Sources</h2>
 
@@ -265,10 +233,33 @@ function Insights() {
         </ResponsiveContainer>
       </div>
 
-      {/* 🔥 INSIGHT */}
       <div className="bg-gradient-to-r from-blue-500/10 to-purple-500/10 p-6 rounded-2xl border border-white/5">
         <h2 className="text-lg font-semibold mb-2">Insight</h2>
         <p className="text-gray-300">{insightText}</p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
+          <h2 className="text-lg font-semibold mb-4">All Months Earnings</h2>
+          {monthlyData.map((m) => (
+            <div key={m.month} className="flex justify-between py-2 border-b border-white/5">
+              <span className="text-gray-400">{m.month}</span>
+              <span className="text-green-400">₹{m.income.toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
+          <h2 className="text-lg font-semibold mb-4">All Months Expenses</h2>
+          {monthlyData.map((m) => (
+            <div key={m.month} className="flex justify-between py-2 border-b border-white/5">
+              <span className="text-gray-400">{m.month}</span>
+              <span className="text-red-400">₹{m.expense.toLocaleString()}</span>
+            </div>
+          ))}
+        </div>
+
       </div>
 
     </div>

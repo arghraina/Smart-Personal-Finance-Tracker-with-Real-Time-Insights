@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-const useStore = create(
+const Usestore = create(
   persist(
     (set) => ({
 
@@ -136,4 +136,4 @@ const useStore = create(
   )
 );
 
-export default useStore;
+export default Usestore;

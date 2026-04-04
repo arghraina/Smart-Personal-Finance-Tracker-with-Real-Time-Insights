@@ -1,13 +1,13 @@
 import { Bell } from "lucide-react";
 import { useState } from "react";
-import useStore from "../store/useStore";
+import Usestore from "../store/Usestore";
 
 function Header() {
-  const role = useStore((state) => state.role);
-  const toggleRole = useStore((state) => state.toggleRole);
-  const notifications = useStore((state) => state.notifications);
-  const clearNotifications = useStore((state) => state.clearNotifications);
-  const markAllAsRead = useStore((state) => state.markAllAsRead);
+  const role = Usestore((state) => state.role);
+  const toggleRole = Usestore((state) => state.toggleRole);
+  const notifications = Usestore((state) => state.notifications);
+  const clearNotifications = Usestore((state) => state.clearNotifications);
+  const markAllAsRead = Usestore((state) => state.markAllAsRead);
 
   const [open, setOpen] = useState(false);
 
@@ -16,8 +16,6 @@ function Header() {
 
   return (
     <div className="w-full flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6 relative">
-
-      {/* LEFT */}
       <div className="flex flex-col">
         <h1 className="text-base md:text-xl font-semibold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
           Track. Analyze. Optimize.
@@ -27,11 +25,8 @@ function Header() {
           Your finances, simplified.
         </p>
       </div>
-
-      {/* RIGHT */}
       <div className="flex items-center justify-between md:justify-end gap-3">
 
-        {/* Role Toggle */}
         <div
           onClick={toggleRole}
           className={`relative w-12 h-6 md:w-16 md:h-8 flex items-center rounded-full cursor-pointer transition-all duration-300
@@ -44,8 +39,6 @@ function Header() {
             `}
           />
         </div>
-
-        {/* Role Text (hide on mobile) */}
         <span className="text-xs md:text-sm text-gray-300 hidden sm:block">
           {isAdmin ? "Admin" : "Viewer"}
         </span>
@@ -69,7 +62,15 @@ function Header() {
           </div>
 
           {open && (
-            <div className="absolute right-0 mt-2 w-64 md:w-72 bg-[#111827] border border-white/5 rounded-xl shadow-lg z-50">
+            <div className="
+    absolute mt-2 z-50
+    right-0 md:right-0
+    left-1/2 md:left-auto
+    -translate-x-1/2 md:translate-x-0
+    w-[90vw] max-w-[260px] md:w-72
+    bg-[#111827] border border-white/5 rounded-xl shadow-lg
+  ">
+
               <div className="p-2 md:p-3 border-b border-white/5 flex justify-between">
                 <span className="text-xs md:text-sm font-semibold">
                   Notifications
@@ -91,11 +92,10 @@ function Header() {
                   notifications.map((n) => (
                     <div
                       key={n.id}
-                      className={`p-2 md:p-3 border-b border-white/5 text-xs md:text-sm ${
-                        !n.read ? "bg-white/5" : ""
-                      }`}
+                      className={`p-2 md:p-3 border-b border-white/5 text-xs md:text-sm ${!n.read ? "bg-white/5" : ""
+                        }`}
                     >
-                      <p>{n.message}</p>
+                      <p className="break-words">{n.message}</p>
                       <span className="text-[10px] text-gray-500">
                         {n.time}
                       </span>
@@ -103,6 +103,7 @@ function Header() {
                   ))
                 )}
               </div>
+
             </div>
           )}
         </div>

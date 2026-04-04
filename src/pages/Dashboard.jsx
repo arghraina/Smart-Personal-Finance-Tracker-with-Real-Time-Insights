@@ -1,4 +1,4 @@
-import useStore from "../store/useStore";
+import Usestore from "../store/Usestore";
 import {
   LineChart,
   Line,
@@ -11,9 +11,8 @@ import {
 } from "recharts";
 
 function Dashboard() {
-  const transactions = useStore((state) => state.transactions);
+  const transactions = Usestore((state) => state.transactions);
 
-  // 💰 Totals
   const income = transactions
     .filter((t) => t.amount > 0)
     .reduce((acc, t) => acc + t.amount, 0);
@@ -24,11 +23,10 @@ function Dashboard() {
 
   const balance = income + expenses;
 
-  // 🔥 GROUP BY MONTH (FIXED)
   const groupedByMonth = {};
 
   transactions.forEach((t) => {
-    const month = t.date.slice(0, 7); // YYYY-MM
+    const month = t.date.slice(0, 7);
 
     if (!groupedByMonth[month]) {
       groupedByMonth[month] = {
@@ -45,12 +43,10 @@ function Dashboard() {
     }
   });
 
-  // Convert → sort chronologically
   const lineData = Object.values(groupedByMonth).sort(
     (a, b) => new Date(a.month) - new Date(b.month)
   );
 
-  // 🥧 Expense Category Pie
   const groupedByCategory = {};
 
   transactions.forEach((t) => {
@@ -78,7 +74,7 @@ function Dashboard() {
 
   return (
     <div className="space-y-6">
-      
+
       <h1 className="text-2xl font-semibold">Dashboard</h1>
 
       {/* Cards */}
@@ -111,7 +107,6 @@ function Dashboard() {
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* ✅ CLEAN MONTHLY LINE CHART */}
         <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
           <h2 className="text-lg font-semibold mb-4">
             Monthly Income vs Expenses
@@ -161,7 +156,6 @@ function Dashboard() {
               </PieChart>
             </ResponsiveContainer>
 
-            {/* Legend */}
             <div className="flex flex-col gap-2">
               {pieData.map((entry, index) => (
                 <div key={index} className="flex items-center gap-2">

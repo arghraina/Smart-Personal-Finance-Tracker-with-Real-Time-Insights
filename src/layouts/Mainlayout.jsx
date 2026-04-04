@@ -10,7 +10,7 @@ function MainLayout() {
 
       <div className="flex-1 p-6 overflow-y-auto">
         <Header />
-        <Outlet /> {/* 🔥 THIS IS REQUIRED */}
+        <Outlet /> 
       </div>
 
     </div>
