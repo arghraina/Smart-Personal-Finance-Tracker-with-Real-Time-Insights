@@ -25,6 +25,7 @@ function Transactions() {
 
   const isAdmin = role === "admin";
 
+  // 🔥 CATEGORY FORMAT FIX
   const formatCategory = (str) => {
     return str
       .toLowerCase()
@@ -55,6 +56,7 @@ function Transactions() {
 
   const categories = ["All", ...new Set(transactions.map((t) => t.category))];
 
+  // ✅ ADD
   const handleAdd = () => {
     if (!form.title || !form.amount || !form.category || !form.date) return;
 
@@ -97,7 +99,7 @@ function Transactions() {
     setTimeout(() => setFeedback(null), 1500);
   };
 
-  // ✅ EXPORT CSV
+  // ✅ EXPORT
   const handleExportCSV = () => {
     if (filteredTransactions.length === 0) return;
 
@@ -128,6 +130,7 @@ function Transactions() {
 
       <h1 className="text-2xl font-semibold">All Transactions</h1>
 
+      {/* CONTROLS */}
       <div className="flex flex-col gap-3">
 
         <input
@@ -169,6 +172,7 @@ function Transactions() {
         </div>
       </div>
 
+      {/* ADD FORM */}
       {isAdmin && (
         <div className="bg-[#111827] p-4 rounded-2xl flex flex-wrap gap-2">
 
@@ -220,8 +224,37 @@ function Transactions() {
         </div>
       )}
 
-      {/* TABLE */}
-      <div className="overflow-x-auto bg-[#111827] rounded-2xl border border-white/5">
+      {/* 🔥 MOBILE CARDS (RESTORED) */}
+      <div className="block md:hidden space-y-3">
+        {filteredTransactions.map((t) => (
+          <div key={t.id} className="bg-[#111827] p-4 rounded-xl border border-white/5">
+
+            <div className="flex justify-between">
+              <span className="font-medium">{t.title}</span>
+              <span className={t.amount > 0 ? "text-green-400" : "text-red-400"}>
+                ₹{t.amount}
+              </span>
+            </div>
+
+            <div className="text-sm text-gray-400 mt-1">
+              {t.category} • {t.date}
+            </div>
+
+            {isAdmin && (
+              <button
+                onClick={() => setDeleteId(t.id)}
+                className="mt-2 text-red-400"
+              >
+                Delete
+              </button>
+            )}
+
+          </div>
+        ))}
+      </div>
+
+      {/* DESKTOP TABLE */}
+      <div className="hidden md:block overflow-x-auto bg-[#111827] rounded-2xl border border-white/5">
 
         <table className="w-full text-sm min-w-[600px]">
           <tbody>
@@ -246,6 +279,7 @@ function Transactions() {
                     </button>
                   </td>
                 )}
+
               </tr>
             ))}
           </tbody>
@@ -253,60 +287,42 @@ function Transactions() {
 
       </div>
 
+      {/* DELETE MODAL */}
       <AnimatePresence>
         {deleteId && (
           <motion.div
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
           >
-            <motion.div
-              className="bg-[#111827] p-6 rounded-2xl border border-white/10 w-[90%] max-w-sm"
-              initial={{ scale: 0.85 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.85 }}
-            >
+            <motion.div className="bg-[#111827] p-6 rounded-2xl border border-white/10 w-[90%] max-w-sm">
               <p className="text-sm mb-5 text-center">
                 Delete this transaction?
               </p>
 
               <div className="flex justify-center gap-4">
-
                 <button
                   onClick={() => setDeleteId(null)}
-                  className="px-4 py-2 rounded-lg bg-gray-600 hover:bg-gray-500 text-sm"
+                  className="px-4 py-2 rounded-lg bg-gray-600"
                 >
                   Cancel
                 </button>
 
                 <button
                   onClick={confirmDelete}
-                  className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-sm"
+                  className="px-4 py-2 rounded-lg bg-red-500"
                 >
                   Delete
                 </button>
-
               </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* FEEDBACK */}
       <AnimatePresence>
         {feedback && (
-          <motion.div
-            className="fixed top-6 left-1/2 -translate-x-1/2 z-50"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-          >
-            <motion.div
-              className="bg-[#111827] px-6 py-4 md:px-8 md:py-5 rounded-2xl border border-white/10 text-sm md:text-base shadow-xl"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-            >
+          <motion.div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+            <motion.div className="bg-[#111827] px-6 py-4 rounded-2xl border border-white/10 text-sm shadow-xl">
               {feedback}
             </motion.div>
           </motion.div>
