@@ -22,7 +22,7 @@
 # Toggling the modes:
 - For now, I have put simple Toggle option to switch, but once we have a good backend ready with this project, we can like keep the `Password Authentication` to switch between Viewer and Admin modes.
 
-# Data persistence:
+# State Management:
 - I have used Zustand to save the state in the Browser Storage. I have used this to maintain the Toggle button. Basically, without it , the app forgets everything, but with this user state persists `npm install zustand`. So, now even when the page refreshes, the state of the Toggle button persists.
 - Also, although the data is hard-coded, but once a change is made in the UI, say Add or Delete, it actually reflects in dashboard.
 To revisit to original form, we do `localStorage.clear()` in the console.
