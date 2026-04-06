@@ -25,7 +25,6 @@ function Transactions() {
 
   const isAdmin = role === "admin";
 
-  // 🔥 CATEGORY FORMAT FIX
   const formatCategory = (str) => {
     return str
       .toLowerCase()
@@ -56,9 +55,12 @@ function Transactions() {
 
   const categories = ["All", ...new Set(transactions.map((t) => t.category))];
 
-  // ✅ ADD
+  // ADD
   const handleAdd = () => {
-    if (!form.title || !form.amount || !form.category || !form.date) return;
+    if (!form.title || !form.amount || !form.category || !form.date) {
+      showFeedback("Fill all the required fields!!!");
+      return;
+    }
 
     let finalAmount = Number(form.amount);
 
@@ -87,7 +89,7 @@ function Transactions() {
     showFeedback("Transaction Added ✅");
   };
 
-  // ✅ DELETE
+  // DELETE
   const confirmDelete = () => {
     deleteTransaction(deleteId);
     setDeleteId(null);
@@ -99,7 +101,7 @@ function Transactions() {
     setTimeout(() => setFeedback(null), 1500);
   };
 
-  // ✅ EXPORT
+  // EXPORT
   const handleExportCSV = () => {
     if (filteredTransactions.length === 0) return;
 
@@ -224,7 +226,13 @@ function Transactions() {
         </div>
       )}
 
-      {/* 🔥 MOBILE CARDS (RESTORED) */}
+      {filteredTransactions.length === 0 && (
+        <div className="text-center text-gray-400 mt-6">
+          No Data to Show
+        </div>
+      )}
+
+      {/* MOBILE CARDS */}
       <div className="block md:hidden space-y-3">
         {filteredTransactions.map((t) => (
           <div key={t.id} className="bg-[#111827] p-4 rounded-xl border border-white/5">
@@ -275,7 +283,7 @@ function Transactions() {
                 {isAdmin && (
                   <td className="p-4 text-center">
                     <button onClick={() => setDeleteId(t.id)}>
-                      <Trash2 size={16} className="text-red-400 hover:text-red-600" />
+                      <Trash2 size={16} className="text-red-400 hover:text-red-600 hover:cursor-pointer" />
                     </button>
                   </td>
                 )}
