@@ -149,7 +149,7 @@ function Insights() {
         ))}
       </div>
 
-      {/* 🔥 TOP CARDS */}
+      {/* TOP CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
         <div className="bg-[#111827] p-6 rounded-2xl border border-white/5">
